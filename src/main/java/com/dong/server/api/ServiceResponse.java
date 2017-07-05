@@ -17,7 +17,7 @@ package com.dong.server.api;
 public class ServiceResponse {
 
    
-    private String state;          //返回成功 或�?�是�? 
+    private String state;          //返回成功 0 成功 9999失败
     private Object data;             //返回消息体Data信息
 
     

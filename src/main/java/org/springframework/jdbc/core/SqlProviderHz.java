@@ -19,9 +19,9 @@ import org.apache.log4j.Logger;
  * This is not a free software, without any authorization is not allowed to use and spread.
  * ==============================================
  * @desc : sql语句 生成方法
- * @author: shenjd（shenjd@51barh.com�?
+ * @author: shenjd（shenjd@51barh.com）
  * @version: v1.0.0
- * @since: 2017�?6�?16�? 上午10:36:52
+ * @since: 2017年6月16日 上午10:36:52
  */
 public class SqlProviderHz {
 
@@ -31,14 +31,14 @@ public class SqlProviderHz {
 	 * 
 	 * 插入
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:46:50
+	 * @author 笨东东
+	 * @Since 2017年6月16日 上午10:46:50
 	 * @param info
 	 * @return
 	 */
 	public String insert(Object info) {
 		Class<?> beanClass = info.getClass();
-		logger.info("执行插入数据方法�?�?, " + beanClass.getName());
+		logger.info("执行插入数据方法开始, " + beanClass.getName());
 
 		String tablename = getTableName(beanClass);
 
@@ -59,7 +59,7 @@ public class SqlProviderHz {
 				sql.append(",");
 		}
 		sql.append(")");
-		logger.info("get insert sql �?:  " + sql);
+		logger.info("get insert sql 为:  " + sql);
 		return sql.toString();
 		// return new SQL() {
 		// {
@@ -76,14 +76,14 @@ public class SqlProviderHz {
 	 * 
 	 * 更新
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:47:02
+	 * @author 笨东东
+	 * @Since 2017年6月16日 上午10:47:02
 	 * @param info
 	 * @return
 	 */
 	public String update(Object info) {
 		Class<?> beanClass = info.getClass();
-		logger.info("执行更新数据方法�?�?, " + beanClass.getName());
+		logger.info("执行更新数据方法开始, " + beanClass.getName());
 		String tableName = getTableName(beanClass);
 		Field[] fields = getFields(beanClass);
 		StringBuilder updateSql = new StringBuilder();
@@ -103,15 +103,15 @@ public class SqlProviderHz {
 							if (!column.required())
 								continue;
 							columnName = column.value();
-						}
-
-						field.setAccessible(true);
-						Object beanValue = field.get(info);
-						if (beanValue != null && !columnName.equals("Id")) {
 							
-							SET(columnName+"=#{"+field.getName()+"}" );
+							
+							field.setAccessible(true);
+							Object beanValue = field.get(info);
+							if (beanValue != null && !columnName.equals("Id")) {
+								
+								SET(columnName+"=#{"+field.getName()+"}" );
+							}
 						}
-						
 					}
 					WHERE("Id=#{Id}");
 				}
@@ -128,14 +128,14 @@ public class SqlProviderHz {
 	 * 
 	 * 删除方法
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:47:09
+	 * @author 笨东东
+	 * @Since 2017年6月16日 上午10:47:09
 	 * @param bean
 	 * @return
 	 */
 	public String delete(Object bean) {
 		Class<?> beanClass = bean.getClass();
-		logger.info("执行删除数据方法�?�?, " + beanClass.getName());
+		logger.info("执行删除数据方法开始, " + beanClass.getName());
 		String tableName = getTableName(beanClass);
 		Field[] fields = getFields(beanClass);
 		StringBuilder deleteSql = new StringBuilder();
@@ -171,14 +171,14 @@ public class SqlProviderHz {
 	 * 
 	 * 查询方法
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:47:09
+	 * @author 笨东东
+	 * @Since 2017年6月16日 上午10:47:09
 	 * @param bean
 	 * @return
 	 */
 	public String fetchOne(Object bean) {
 		Class<?> beanClass = bean.getClass();
-		logger.info("执行查询数据方法�?�?," + beanClass.getName());
+		logger.info("执行查询数据方法开始," + beanClass.getName());
 		String tableName = getTableName(beanClass);
 		Map<String, List<String>> map = getfieldAndValue(bean);
 		StringBuilder selectSql = new StringBuilder(" select * ");
@@ -196,10 +196,10 @@ public class SqlProviderHz {
 	}
 	
 	/**
-	 * 根据注解 获取 字段�? 和字段�?? SqlProvider.java 方法的描�?
+	 * 根据注解 获取 字段名 和字段值 SqlProvider.java 方法的描述
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?14�? 下午9:20:40
+	 * @author 笨东东
+	 * @Since 2017年6月14日 下午9:20:40
 	 * @param bean
 	 * @return
 	 */
@@ -240,10 +240,10 @@ public class SqlProviderHz {
 	}
 
 	/**
-	 * 获取表名 SqlProvider.java 方法的描�?
+	 * 获取表名 SqlProvider.java 方法的描述
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?14�? 下午8:58:47
+	 * @author 笨东东
+	 * @Since 2017年6月14日 下午8:58:47
 	 * @param obj
 	 * @return
 	 */
@@ -256,10 +256,10 @@ public class SqlProviderHz {
 	}
 
 	/**
-	 * 获取类属�? SqlProvider.java 方法的描�?
+	 * 获取类属性 SqlProvider.java 方法的描述
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?14�? 下午8:57:58
+	 * @author 笨东东
+	 * @Since 2017年6月14日 下午8:57:58
 	 * @param beanClass
 	 * @return
 	 */
@@ -283,17 +283,18 @@ public class SqlProviderHz {
 	
 	
 	/**
-	 * 查询�?有数�?
-	 * SqlProviderHz.java 方法的描�?
-	 * @author 笨东�?
-	 * @Since 2017�?6�?20�? 下午2:28:16
+	 * 查询所有数据
+	 * SqlProviderHz.java 方法的描述
+	 * @author 笨东东
+	 * @Since 2017年6月20日 下午2:28:16
 	 * @param info
 	 * @return
 	 */
 	public String fetchAll(Object info){
 		
 		Class<?> beanClass = info.getClass();
-		logger.info("执行查询�?有数据的方法�?�?, " + beanClass.getName());
+		logger.info("执行查询所有数据的方法开始, " + beanClass.getName());
+
 		String tablename = getTableName(beanClass);
 		 return new SQL() {
 				 {

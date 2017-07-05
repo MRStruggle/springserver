@@ -13,16 +13,16 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  * ----------------------------------------------
  * This is not a free software, without any authorization is not allowed to use and spread.
  * ==============================================
- * @desc :  SPRING WEB 容器启动注解�?  类标题， 类功能描�?  或�?? 集成 WebApplicationInitializer 
- * @author: shenjd（shenjd@51barh.com�?
+ * @desc :  SPRING WEB 容器启动注解类  类标题， 类功能描述  或者 集成 WebApplicationInitializer 
+ * @author: shenjd（shenjd@51barh.com）
  * @version: v1.0.0
- * @since: 2017�?6�?19�? 上午9:21:38
+ * @since: 2017年6月19日 上午9:21:38
  */
 public class WebInitializerHz extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	 /**
-     * 该方法定义的是全�?�? applicationContext
-     * 在初始化时需要去扫描哪些带注解（如：@Configuration）的�?
+     * 该方法定义的是全局的 applicationContext
+     * 在初始化时需要去扫描哪些带注解（如：@Configuration）的类
      */
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
@@ -32,7 +32,7 @@ public class WebInitializerHz extends AbstractAnnotationConfigDispatcherServletI
 
 	 /**
      * 该方法定义的时Servlet级别的applicationContext
-     * 在初始化时需要去扫描哪些带注解（如：@Configuration）的�?
+     * 在初始化时需要去扫描哪些带注解（如：@Configuration）的类
      */
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
@@ -41,7 +41,7 @@ public class WebInitializerHz extends AbstractAnnotationConfigDispatcherServletI
 	}
 
 	/**
-     * 定义 DispatcherServlet 拦截的路�?
+     * 定义 DispatcherServlet 拦截的路径
      */
 	@Override
 	protected String[] getServletMappings() {
@@ -69,6 +69,5 @@ public class WebInitializerHz extends AbstractAnnotationConfigDispatcherServletI
 	private static final long MAX_REQUEST_SIZE = 20971520; // 20MB : Total request size containing Multi part.
 	
 	private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
-
 
 }

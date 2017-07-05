@@ -15,24 +15,22 @@ import org.springframework.stereotype.Component;
  * IBaseDao.java
  *  ============================================== 
  * Copyright 2017-2017 by http://www.bhnhz.com
- * ---------------------------------------------- This is not a free software,
- * without any authorization is not allowed to use and spread.
+ * ---------------------------------------------- 
+ * This is not a free software,without any authorization is not allowed to use and spread.
  * ==============================================
- * 
- * @desc : TODO 类标题， 类功能描�?
- * @author: shenjd（shenjd@51barh.com�?
+ * @desc : TODO 类标题， 类功能描述
+ * @author: shenjd（shenjd@51barh.com）
  * @version: v1.0.0
- * @since: 2017�?6�?16�? 上午10:35:07
+ * @since: 2017年6月16日 上午10:35:07
  */
-
 public interface IBaseDao<T> {
 
 	/**
 	 * 
 	 * 新增数据方法
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:28:03
+	 * @author 笨东�?
+	 * @Since 2017�?6�?16�? 上午10:28:03
 	 * @param bean
 	 * @return
 	 */
@@ -45,8 +43,8 @@ public interface IBaseDao<T> {
 	 * 
 	 * 删除数据方法
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:35:46
+	 * @author 笨东�?
+	 * @Since 2017�?6�?16�? 上午10:35:46
 	 * @param bean
 	 * @return
 	 */
@@ -56,8 +54,8 @@ public interface IBaseDao<T> {
 	/**
 	 * 更新数据方法
 	 * 
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 上午10:36:25
+	 * @author 笨东�?
+	 * @Since 2017�?6�?16�? 上午10:36:25
 	 * @param bean
 	 * @return
 	 */
@@ -67,8 +65,8 @@ public interface IBaseDao<T> {
 	/**
 	 * 
 	 * 查询方法
-	 * @author 笨东�?
-	 * @Since 2017�?6�?16�? 下午5:09:12
+	 * @author 笨东�?
+	 * @Since 2017�?6�?16�? 下午5:09:12
 	 * @param bean
 	 * @return
 	 */
@@ -76,10 +74,10 @@ public interface IBaseDao<T> {
 	public T fetchOne(T bean);
 	
 	/**
-	 * 查询�?�?  单表操作
-	 * IBaseDao.java 方法的描�?
-	 * @author 笨东�?
-	 * @Since 2017�?6�?20�? 下午2:24:19
+	 * 查询�?�?  单表操作
+	 * IBaseDao.java 方法的描�?
+	 * @author 笨东�?
+	 * @Since 2017�?6�?20�? 下午2:24:19
 	 * @param bean
 	 * @return
 	 */

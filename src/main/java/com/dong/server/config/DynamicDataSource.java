@@ -2,15 +2,14 @@ package com.dong.server.config;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
-import com.dong.server.config.util.DataSourceHolder;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	
 	 private static final ThreadLocal<String> contextHolder = new InheritableThreadLocal<String>(); 
 	    /**
-	     * @Description: 设置数据源类�?
-	     * @param dataSourceType  数据库类�?
+	     * @Description: 设置数据源类型
+	     * @param dataSourceType  数据库类型
 	     * @return void
 	     * @throws
 	     */ 
@@ -19,7 +18,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	    } 
 	     
 	    /**
-	     * @Description: 获取数据源类�?
+	     * @Description: 获取数据源类类型
 	     * @param 
 	     * @return String
 	     * @throws
@@ -29,7 +28,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	    } 
 	     
 	    /**
-	     * @Description: 清除数据源类�?
+	     * @Description: 清除数据源类型
 	     * @param 
 	     * @return void
 	     * @throws

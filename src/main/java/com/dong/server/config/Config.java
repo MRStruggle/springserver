@@ -1,29 +1,44 @@
 package com.dong.server.config;
 
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.sql.DataSource;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.accept.ContentNegotiationManager;
@@ -31,6 +46,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
@@ -38,17 +54,17 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-
-
-
-@Configuration
-@ComponentScan("com.dong.server")
-@EnableWebMvc
-@EnableTransactionManagement
-@EnableAspectJAutoProxy
-@EnableScheduling
+@Configuration  //启用配置文件
+@ComponentScan(basePackages ="com.dong.server")  // 扫描包路径
+@EnableWebMvc    //启用Mvc
+@EnableTransactionManagement   //启用事物管理
+@EnableAspectJAutoProxy   //启用aop注解
+@EnableScheduling    //启用后台事物
+//@PropertySource(value="classpath:db.properties") 
+//@PropertySource(value = { "classpath:db.properties","classpath:db2.properties" })
 public class Config extends WebMvcConfigurerAdapter{
 
+	
 	/**
 	 * 默认情况下 用json输出 
 	 * 或者调用的时  直接指定方法.json
@@ -58,6 +74,14 @@ public class Config extends WebMvcConfigurerAdapter{
                 MediaType.APPLICATION_JSON); 
               // MediaType.TEXT_HTML 为jsp  视图解析器处理
     }
+	
+	
+	
+	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+		// TODO Auto-generated method stub
+		super.configureDefaultServletHandling(configurer);
+		 configurer.enable(); //配置静态文件处理
+	}
 	
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver(ContentNegotiationManager manager) {
@@ -95,6 +119,8 @@ public class Config extends WebMvcConfigurerAdapter{
         viewResolver.setViewClass(JstlView.class);  
         viewResolver.setPrefix("/WEB-INF/jsp/");  
         viewResolver.setSuffix(".jsp");  
+        //可以在JSP页面中通过${}访问beans
+        viewResolver.setExposeContextBeansAsAttributes(true);
         return viewResolver;  
     }
     
@@ -116,11 +142,18 @@ public class Config extends WebMvcConfigurerAdapter{
 		
 	}
 	
+	 /*
+     * PropertySourcesPlaceHolderConfigurer Bean only required for @Value("{}") annotations.
+     * Remove this bean if you are not using @Value annotations for injecting properties.
+     */
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer config  = new PropertySourcesPlaceholderConfigurer();
-
-        String filePathdb = "db.properties";
+      PropertySourcesPlaceholderConfigurer config  = new PropertySourcesPlaceholderConfigurer();
+       
+//      config.setPlaceholderPrefix(PlaceholderConfigurerSupport.DEFAULT_PLACEHOLDER_PREFIX);
+//      config.setPlaceholderSuffix(PlaceholderConfigurerSupport.DEFAULT_PLACEHOLDER_SUFFIX);
+//      config.setValueSeparator(PlaceholderConfigurerSupport.DEFAULT_VALUE_SEPARATOR);  
+        String filePathdb = "db.properties";//src/main/resources/
         String filePathdbtwo ="db2.properties";
         //config.setLocation(new ClassPathResource(filePath,Config.class.getClassLoader()));
         config.setLocations(new ClassPathResource[]{new ClassPathResource(filePathdb,Config.class.getClassLoader()),new ClassPathResource(filePathdbtwo,Config.class.getClassLoader())});
@@ -128,11 +161,12 @@ public class Config extends WebMvcConfigurerAdapter{
         return config;
     }
     
+   
+    
 
     /**
-     * 数据库配置
+     * 数据库1配置
      */
-   // @Bean//(name="getdataSource")
     public DataSource  getdataSource(
             @Value("${db.url}")String url,
             @Value("${db.user}")String username,
@@ -140,28 +174,34 @@ public class Config extends WebMvcConfigurerAdapter{
             @Value("${db.driver}")String driverClassName
             ){
 
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(url.trim());
-        dataSource.setUsername(username.trim());
-        dataSource.setPassword(password.trim());
-        dataSource.setDriverClassName(driverClassName.trim());
-        
-        return dataSource;
+    	 DriverManagerDataSource dataSource = new DriverManagerDataSource();
+         dataSource.setUrl(url.trim());
+         dataSource.setUsername(username.trim());
+         dataSource.setPassword(password.trim());
+         dataSource.setDriverClassName(driverClassName.trim());
+      return dataSource;
     }
     
+    /**
+     * 数据库2 配置
+     * @param url
+     * @param username
+     * @param password
+     * @param driverClassName
+     * @return
+     */
     public DataSource  getdataSource2(
             @Value("${db2.url}")String url,
             @Value("${db2.user}")String username,
             @Value("${db2.password}")String password,
             @Value("${db2.driver}")String driverClassName
             ){
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    	
+    	DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url.trim());
         dataSource.setUsername(username.trim());
         dataSource.setPassword(password.trim());
         dataSource.setDriverClassName(driverClassName.trim());
-        
         return dataSource;
     }
 
@@ -172,16 +212,34 @@ public class Config extends WebMvcConfigurerAdapter{
     	DynamicDataSource ss = new DynamicDataSource();
     	
     	 Map<Object, Object> map = new HashMap<Object, Object>();
-    	
-    	 map.put("dataSource", getdataSource("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver"));
+    	 try {
+    		
+			InputStream db = new BufferedInputStream(new FileInputStream("src/main/resources/db.properties"));
+			InputStream db2 = new BufferedInputStream(new FileInputStream("src/main/resources/db2.properties"));
+			Properties p1 = new Properties();
+			Properties p2 = new Properties();
+			p1.load(db);
+			p2.load(db2);
+			
+			map.put("dataSource", getdataSource(p1.getProperty("db.url"),p1.getProperty("db.user"),p1.getProperty("db.password"),p1.getProperty("db.driver")));
+	    	 
+	     	DataSource datasource = getdataSource2(p1.getProperty("db2.url"),p1.getProperty("db2.user"),p1.getProperty("db2.password"),p1.getProperty("db2.driver"));
+	    	 
+	    	
+	     	map.put("dataSource2", datasource);
+	    	ss.setTargetDataSources(map);
+	    	ss.setDefaultTargetDataSource(datasource);
+	    	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	 
     	 
-    	
-    	DataSource datasource = getdataSource2("jdbc:mysql://localhost:3306/testtwo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver");
-    	map.put("dataSource2", datasource);
-    	ss.setTargetDataSources(map);
-    	ss.setDefaultTargetDataSource(datasource);
-    	
     	return ss;
     	
     }
@@ -210,7 +268,7 @@ public class Config extends WebMvcConfigurerAdapter{
         return configurer;
     }
 
-    //用来�? MyBatis 环境中控制数据库事物的，使用即在你的service 方法上加 @Transactional 即可
+  //用来在 MyBatis 环境中控制数据库事物的，使用即在你的service 方法上加 @Transactional 即可
     @Bean//(name="txmanager")
     public PlatformTransactionManager  dataSourceTransactionManager(DataSource ds){
         DataSourceTransactionManager  tm  = new DataSourceTransactionManager();
@@ -219,4 +277,5 @@ public class Config extends WebMvcConfigurerAdapter{
         return tm;
     }
     
+   
 }

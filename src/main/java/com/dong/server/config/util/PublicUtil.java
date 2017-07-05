@@ -27,20 +27,20 @@ import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
  * ----------------------------------------------
  * This is not a free software, without any authorization is not allowed to use and spread.
  * ==============================================
- * @desc :  公共方法 类标题， 类功能描�?
- * @author: shenjd（shenjd@51barh.com�?
+ * @desc :  公共方法 类标题， 类功能描述
+ * @author: shenjd（shenjd@51barh.com）
  * @version: v1.0.0
- * @since: 2017�?6�?21�? 下午3:47:50
+ * @since: 2017年6月21日 下午3:47:50
  */
 public class PublicUtil {
 
 	/**
-     * @desc :    属�?? 复制  修改 spring 工具�?
+     * @desc :    属性 复制  修改 spring 工具类
      * @author:  shenjd (shenjd@51lick.com)
-     * @param:  [source    原对�?,
+     * @param:  [source    原对象,
      *          target     目标对象,
      *          editable    暂时不用 传入 null,
-     *         ignoreProperties   不包含什么属�? 转换
+     *         ignoreProperties   不包含什么属性 转换
      *         ]
      * @return  void
      * @date: 2017/5/4 19:08
@@ -75,7 +75,7 @@ public class PublicUtil {
                                 readMethod.setAccessible(true);
                             }
                             Object value = readMethod.invoke(source);
-                            if(value != null){  //只拷贝不为null的属�? 增加如下判断
+                            if(value != null){  //只拷贝不为null的属性 增加如下判断
                                 if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
                                     writeMethod.setAccessible(true);
                                 }

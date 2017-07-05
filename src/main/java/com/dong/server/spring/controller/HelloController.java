@@ -34,7 +34,7 @@ public class HelloController {
 	 * @return
 	 */
 	@DataSource(value="dataSource")
-	@RequestMapping(value="save",method= RequestMethod.POST)
+	@RequestMapping(value="save")//,method= RequestMethod.POST
 	public ServiceResponse save(@RequestBody Hello hello){
 		
 		hello.setCreateTime(Timestamp.valueOf(hello.getCreatedate()));

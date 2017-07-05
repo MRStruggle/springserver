@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -47,6 +48,9 @@ public class SpringTest {
 
 	private String url;//请求url
 
+	@Value("${db.url}")
+	  String url1;
+	
 	@Autowired
 	private WebApplicationContext context;   //web 系统上下文
 
@@ -60,14 +64,14 @@ public class SpringTest {
 
 	@Test
 	public void contextLoads() throws Exception {
-		
+		 
 		String requestBody ="";
 		
 		 
 		  url= urlbase+"hello/save";
 		  requestBody= "{\"name\":\"测试数据库test\", \"createdate\": \"2017-07-04 13:43:00\"}";
 		  
-		  
+		 
 		  url= urlbase+"hello/savedef";
 		  requestBody= "{\"name\":\"测试默认数据库testtwo\", \"createdate\": \"2017-07-04 13:43:00\"}";
 		  
