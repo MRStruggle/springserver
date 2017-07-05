@@ -48,8 +48,7 @@ public class SpringTest {
 
 	private String url;//请求url
 
-	@Value("${db.url}")
-	  String url1;
+	
 	
 	@Autowired
 	private WebApplicationContext context;   //web 系统上下文
@@ -81,8 +80,8 @@ public class SpringTest {
 		  url= urlbase+"hello/fetchAll";
 		  requestBody= "{\"name\":\"测试数据库testtwo\", \"createdate\": \"2017-07-04 13:43:00\"}";
 		  
-		  url= urlbase+"hello/update";
-		  requestBody= "{\"name\":\"更新200707数据库testtwo\", \"id\":\"2247ccb0609a11e7b06c00ffa6891afb\",\"createdate\": \"2017-07-05 18:43:00\"}";
+		 // url= urlbase+"hello/update";
+		 // requestBody= "{\"name\":\"更新200707数据库testtwo\", \"id\":\"2247ccb0609a11e7b06c00ffa6891afb\",\"createdate\": \"2017-07-05 18:43:00\"}";
 		  
 		  requestBuilder =fetchRequestBuilder(url,requestBody);
 
