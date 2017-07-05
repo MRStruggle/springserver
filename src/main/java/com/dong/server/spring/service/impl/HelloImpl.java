@@ -32,6 +32,12 @@ public class HelloImpl implements IHello {
 		return helloDao.fetchAllObj(hello);
 	}
 
+	@Override
+	public void update(Hello hello) {
+		// TODO Auto-generated method stub
+		helloDao.update(hello);
+	}
+
 
 	
 	

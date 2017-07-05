@@ -82,4 +82,14 @@ public class HelloController {
 		return ServiceResponse.getInstance("0", hellos);
 	}
 	
+	
+	@RequestMapping(value="update",method= RequestMethod.POST)
+	public ServiceResponse update(@RequestBody Hello hello){
+		
+		//hello.setCreateTime(Timestamp.valueOf(hello.getCreatedate()));
+		helloimpl.update(hello);
+		
+		return ServiceResponse.getInstance("0", "ok");
+	}
+	
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.apache.log4j.Logger;
 
 
@@ -82,46 +83,88 @@ public class SqlProviderHz {
 	 * @return
 	 */
 	public String update(Object info) {
-		Class<?> beanClass = info.getClass();
-		logger.info("执行更新数据方法开始, " + beanClass.getName());
-		String tableName = getTableName(beanClass);
-		Field[] fields = getFields(beanClass);
-		StringBuilder updateSql = new StringBuilder();
-		//updateSql.append(" update ").append(tableName).append(" set ");
-		SQL sql =null;
-		try {
-			
-			sql =  new SQL(){
-				{
-					update(tableName);
-					
-					for (int i = 0; i < fields.length; i++) {
-						Field field = fields[i];
-						Column column = field.getAnnotation(Column.class);
-						String columnName = "";
-						if (column != null) {
-							if (!column.required())
-								continue;
-							columnName = column.value();
-							
-							
-							field.setAccessible(true);
-							Object beanValue = field.get(info);
-							if (beanValue != null && !columnName.equals("Id")) {
-								
-								SET(columnName+"=#{"+field.getName()+"}" );
-							}
-						}
-					}
-					WHERE("Id=#{Id}");
-				}
-			};
-			
-		} catch (Exception e) {
-			new RuntimeException("get update sql is exceptoin: " + e);
-		}
-		logger.info("get update sql 为： " + sql.toString());
-		return sql.toString();
+		
+		 Class<?> beanClass = info.getClass();
+	        String tableName = getTableName(beanClass);
+	        Field[] fields = getFields(beanClass);
+	        StringBuilder updateSql = new StringBuilder();
+	        updateSql.append(" update ").append(tableName).append(" set ");
+	        try {
+	            for (int i = 0; i < fields.length; i++) {
+	                Field field = fields[i];
+	                Column column = field.getAnnotation(Column.class);
+	                String columnName = "";
+	                if (column != null) {
+	                    if (!column.required())
+	                        continue;
+	                    columnName = column.value();
+	                    
+	                    
+	                    field.setAccessible(true);
+		                Object beanValue = field.get(info);
+		                if (beanValue != null && !columnName.equals("id")) {
+		                    updateSql.append(columnName).append("=#{").append(field.getName()).append("}");
+		                    if (i != fields.length - 1) {
+		                        updateSql.append(",");
+		                    }
+		                }
+	                }
+	               
+	                
+	            }
+	        } catch (Exception e) {
+	            new RuntimeException("get update sql is exceptoin:" + e);
+	        }
+	        
+	        if(updateSql.toString().endsWith(",")){
+	        	String sub = updateSql.substring(0, updateSql.length()-1);
+	        	logger.info("get update sql 为： " +sub+ " where id =#{id}");
+	        	return sub+ " where id =#{id}";
+	        }else{
+	        	 updateSql.append(" where ").append("id =#{id}");
+	        }
+	        logger.info("get update sql 为： " +updateSql.toString());
+	        return updateSql.toString();
+//		Class<?> beanClass = info.getClass();
+//		logger.info("执行更新数据方法开始, " + beanClass.getName());
+//		String tableName = getTableName(beanClass);
+//		Field[] fields = getFields(beanClass);
+//		//StringBuilder updateSql = new StringBuilder();
+//		//updateSql.append(" update ").append(tableName).append(" set ");
+//		SQL sql =null;
+//		try {
+//			
+//			sql =  new SQL(){
+//				{
+//					update(tableName);
+//					SET(fields.toString());
+//					for (int i = 0; i < fields.length; i++) {
+//						Field field = fields[i];
+//						Column column = field.getAnnotation(Column.class);
+//						String columnName = "";
+//						if (column != null) {
+//							if (!column.required())
+//								continue;
+//							columnName = column.value();
+//							
+//							
+//							field.setAccessible(true);
+//							Object beanValue = field.get(info);
+//							if (beanValue != null && !columnName.equals("Id")) {
+//								
+//								SET(columnName+"=#{"+field.getName()+"}" );
+//							}
+//						}
+//					}
+//					WHERE("Id=#{Id}");
+//				}
+//			};
+//			
+//		} catch (Exception e) {
+//			new RuntimeException("get update sql is exceptoin: " + e);
+//		}
+//		logger.info("get update sql 为： " + sql.toString());
+//		return sql.toString();
 	}
 
 	/**
@@ -268,14 +311,30 @@ public class SqlProviderHz {
 		ArrayList<Field> fields = new ArrayList<Field>();
 		if (beanFields != null && beanFields.length > 0) {
 			for (int i = 0; i < beanFields.length; i++) {
-				fields.add(beanFields[i]);
+				Field field = beanFields[i];
+				Column column = field.getAnnotation(Column.class);
+				
+				if (column != null) {
+					if (!column.required())
+						continue;
+					
+					fields.add(beanFields[i]);
+				}
+				
 			}
 		}
 		Class<?> beanSuperClass = beanClass.getSuperclass();
 		Field[] beanSuperFields = beanSuperClass.getDeclaredFields();
 		if (beanSuperFields != null && beanSuperFields.length > 0) {
 			for (int i = 0; i < beanSuperFields.length; i++) {
+				Field field = beanSuperFields[i];
+				Column column = field.getAnnotation(Column.class);
+				
+				if (column != null) {
+					if (!column.required())
+						continue;
 				fields.add(beanSuperFields[i]);
+				}
 			}
 		}
 		return (Field[]) fields.toArray(new Field[fields.size()]);

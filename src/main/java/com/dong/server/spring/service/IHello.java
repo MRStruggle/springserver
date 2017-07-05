@@ -11,4 +11,6 @@ public interface IHello {
 	void savetwo(Hello hello);
 
 	List<Hello> fetchAll(Hello hello);
+
+	void update(Hello hello);
 }

@@ -223,7 +223,7 @@ public class Config extends WebMvcConfigurerAdapter{
 			
 			map.put("dataSource", getdataSource(p1.getProperty("db.url"),p1.getProperty("db.user"),p1.getProperty("db.password"),p1.getProperty("db.driver")));
 	    	 
-	     	DataSource datasource = getdataSource2(p1.getProperty("db2.url"),p1.getProperty("db2.user"),p1.getProperty("db2.password"),p1.getProperty("db2.driver"));
+	     	DataSource datasource = getdataSource2(p2.getProperty("db2.url"),p2.getProperty("db2.user"),p2.getProperty("db2.password"),p2.getProperty("db2.driver"));
 	    	 
 	    	
 	     	map.put("dataSource2", datasource);
