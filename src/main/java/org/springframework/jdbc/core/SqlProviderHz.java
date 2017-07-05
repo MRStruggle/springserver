@@ -99,7 +99,6 @@ public class SqlProviderHz {
 	                        continue;
 	                    columnName = column.value();
 	                    
-	                    
 	                    field.setAccessible(true);
 		                Object beanValue = field.get(info);
 		                if (beanValue != null && !columnName.equals("id")) {
