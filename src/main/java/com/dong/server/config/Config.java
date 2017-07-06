@@ -37,6 +37,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -54,8 +55,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import com.dong.server.config.util.JsonUtil;
+import com.dong.server.config.viewresolver.Jaxb2MarshallingXmlViewResolver;
+import com.dong.server.config.viewresolver.JsonViewResolver;
+import com.dong.server.spring.entity.Hello;
+
 @Configuration  //启用配置文件
-@ComponentScan(basePackages ="com.dong.server")  // 扫描包路径
+@ComponentScan("com.dong.server")  // 扫描包路径
 @EnableWebMvc    //启用Mvc
 @EnableTransactionManagement   //启用事物管理
 @EnableAspectJAutoProxy   //启用aop注解
@@ -68,10 +74,14 @@ public class Config extends WebMvcConfigurerAdapter{
 	/**
 	 * 默认情况下 用json输出 
 	 * 或者调用的时  直接指定方法.json
+	 * 第一步是建立它用于通过委托给ContentNegotiationManager，以确定所请求的媒体类型的请求是 ContentNegotiationStrategy 列表的一个实例。
+	 * 默认情况下PathExtensionContentNegotiationStrategy被查询(使用URL扩展名，例如. .xls, .pdf,.json.)，
+	 * 接着ParameterContentNegotiationStrategy(使用请求参数 ‘format=xls’，例如)，
+	 * 其次是HeaderContentNegotiationStrategy(使用HTTP接受头)。
 	 */
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {  
         configurer.ignoreAcceptHeader(true).defaultContentType(  
-                MediaType.APPLICATION_JSON); 
+                MediaType.TEXT_HTML); //APPLICATION_JSON
               // MediaType.TEXT_HTML 为jsp  视图解析器处理
     }
 	
@@ -90,15 +100,43 @@ public class Config extends WebMvcConfigurerAdapter{
 
 		// Define all possible view resolvers
 		List<ViewResolver> resolvers = new ArrayList<ViewResolver>();
+		resolvers.add(jaxb2MarshallingXmlViewResolver());
 		resolvers.add(jsonViewResolver());
 		resolvers.add(jspViewResolver());
+//		resolvers.add(pdfViewResolver());
+//		resolvers.add(excelViewResolver());
 		resolver.setOrder(1);
 		resolver.setViewResolvers(resolvers);
 		return resolver;
+		
 	}
 	
-   
-    @Bean  
+	/*
+	 * Configure View resolver to provide XML output Uses JAXB2 marshaller to
+	 * marshall/unmarshall POJO's (with JAXB annotations) to XML
+	 */
+	@Bean
+	public ViewResolver jaxb2MarshallingXmlViewResolver() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setClassesToBeBound(Hello.class);
+		return new Jaxb2MarshallingXmlViewResolver(marshaller);
+	}
+	
+//	@Bean
+//	public ViewResolver pdfViewResolver() {
+//		return new PdfViewResolver();
+//	}
+
+	/*
+	 * Configure View resolver to provide XLS output using Apache POI library to
+	 * generate XLS output for an object content
+	 */
+//	@Bean
+//	public ViewResolver excelViewResolver() {
+//		return new ExcelViewResolver();
+//	}
+	
+   @Bean  
     public ViewResolver jsonViewResolver() {
     	//MappingJackson2JsonView view = new MappingJackson2JsonView();
         return new JsonViewResolver();  
@@ -125,23 +163,6 @@ public class Config extends WebMvcConfigurerAdapter{
     }
     
     
-	class JsonViewResolver implements ViewResolver {
-		public JsonViewResolver(){
-			MappingJackson2JsonView view = new MappingJackson2JsonView();
-//			view.setPrettyPrint(true);
-//			view.setObjectMapper(JsonUtil.objMapper);
-		}
-		
-		@Override		
-		public View resolveViewName(String viewName, Locale locale) throws Exception {
-			MappingJackson2JsonView view = new MappingJackson2JsonView();
-//			view.setPrettyPrint(true);
-//			view.setObjectMapper(JsonUtil.objMapper);
-			return view;
-		}
-		
-	}
-	
 	 /*
      * PropertySourcesPlaceHolderConfigurer Bean only required for @Value("{}") annotations.
      * Remove this bean if you are not using @Value annotations for injecting properties.
@@ -167,6 +188,7 @@ public class Config extends WebMvcConfigurerAdapter{
     /**
      * 数据库1配置
      */
+    
     public DataSource  getdataSource(
             @Value("${db.url}")String url,
             @Value("${db.user}")String username,
@@ -182,6 +204,9 @@ public class Config extends WebMvcConfigurerAdapter{
       return dataSource;
     }
     
+    
+   
+    
     /**
      * 数据库2 配置
      * @param url
@@ -190,6 +215,7 @@ public class Config extends WebMvcConfigurerAdapter{
      * @param driverClassName
      * @return
      */
+   
     public DataSource  getdataSource2(
             @Value("${db2.url}")String url,
             @Value("${db2.user}")String username,
@@ -212,32 +238,36 @@ public class Config extends WebMvcConfigurerAdapter{
     	DynamicDataSource ss = new DynamicDataSource();
     	
     	 Map<Object, Object> map = new HashMap<Object, Object>();
-    	 try {
+    	// try {
     		
-			InputStream db = new BufferedInputStream(new FileInputStream("src/main/resources/db.properties"));
-			InputStream db2 = new BufferedInputStream(new FileInputStream("src/main/resources/db2.properties"));
-			Properties p1 = new Properties();
-			Properties p2 = new Properties();
-			p1.load(db);
-			p2.load(db2);
-			
-			map.put("dataSource", getdataSource(p1.getProperty("db.url"),p1.getProperty("db.user"),p1.getProperty("db.password"),p1.getProperty("db.driver")));
-	    	 
-	     	DataSource datasource = getdataSource2(p2.getProperty("db2.url"),p2.getProperty("db2.user"),p2.getProperty("db2.password"),p2.getProperty("db2.driver"));
-	    	 
+//			InputStream db = new BufferedInputStream(new FileInputStream("db.properties"));
+//			InputStream db2 = new BufferedInputStream(new FileInputStream("db2.properties"));
+//			Properties p1 = new Properties();
+//			Properties p2 = new Properties();
+//			p1.load(db);
+//			p2.load(db2);
+//			
+//			map.put("dataSource", getdataSource(p1.getProperty("db.url"),p1.getProperty("db.user"),p1.getProperty("db.password"),p1.getProperty("db.driver")));
+//	    	 
+//	     	DataSource datasource = getdataSource2(p2.getProperty("db2.url"),p2.getProperty("db2.user"),p2.getProperty("db2.password"),p2.getProperty("db2.driver"));
+    		 map.put("dataSource", getdataSource("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver"));
+        	 
+        	 
+    	    	
+    	    DataSource datasource = getdataSource2("jdbc:mysql://localhost:3306/testtwo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver");
 	    	
 	     	map.put("dataSource2", datasource);
 	    	ss.setTargetDataSources(map);
 	    	ss.setDefaultTargetDataSource(datasource);
 	    	
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	 catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
     	 
     	 
     	return ss;

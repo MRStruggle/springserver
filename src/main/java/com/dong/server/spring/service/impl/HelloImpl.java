@@ -38,6 +38,12 @@ public class HelloImpl implements IHello {
 		helloDao.update(hello);
 	}
 
+	@Override
+	public void del(Hello hello) {
+		// TODO Auto-generated method stub
+		helloDao.delete(hello);
+	}
+
 
 	
 	

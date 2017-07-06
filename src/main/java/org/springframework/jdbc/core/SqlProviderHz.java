@@ -118,9 +118,9 @@ public class SqlProviderHz {
 	        if(updateSql.toString().endsWith(",")){
 	        	String sub = updateSql.substring(0, updateSql.length()-1);
 	        	logger.info("get update sql 为： " +sub+ " where id =#{id}");
-	        	return sub+ " where id =#{id}";
+	        	return sub+ " where id =#{id} ";
 	        }else{
-	        	 updateSql.append(" where ").append("id =#{id}");
+	        	 updateSql.append(" where ").append(" id =#{id} ");
 	        }
 	        logger.info("get update sql 为： " +updateSql.toString());
 	        return updateSql.toString();

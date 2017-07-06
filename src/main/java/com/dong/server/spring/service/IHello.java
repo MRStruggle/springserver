@@ -13,4 +13,6 @@ public interface IHello {
 	List<Hello> fetchAll(Hello hello);
 
 	void update(Hello hello);
+
+	void del(Hello hello);
 }
