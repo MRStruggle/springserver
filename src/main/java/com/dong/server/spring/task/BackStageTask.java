@@ -38,10 +38,10 @@ private Logger logger = Logger.getLogger(BackStageTask.class);
 	 * @author 笨东东
 	 * @Since 2017年6月28日 下午12:00:41
 	 */
-	@Scheduled(fixedRate = 1000 * 10,initialDelay = 1000 * 5)  
-    private void taskRun(){ 
-		//do something
-        logger.info("InstructionTask run ...");  
-    }
+//	@Scheduled(fixedRate = 1000 * 10,initialDelay = 1000 * 5)  
+//    private void taskRun(){ 
+//		//do something
+//        logger.info("InstructionTask run ...");  
+//    }
 	
 }
