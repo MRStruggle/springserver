@@ -1,23 +1,31 @@
 package com.dong.server.config.util;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.codehaus.jackson.map.ser.CustomSerializerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.codehaus.jackson.JsonGenerator;  
+import org.codehaus.jackson.JsonProcessingException;  
+import org.codehaus.jackson.map.JsonSerializer;  
+import org.codehaus.jackson.map.ObjectMapper;  
+import org.codehaus.jackson.map.SerializerProvider;  
+import org.codehaus.jackson.map.ser.CustomSerializerFactory;  
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-
-public class JsonUtil {
+public class JsonUtil extends ObjectMapper {
 	
-	
-	public static Gson gson=new GsonBuilder().disableHtmlEscaping().create(); //防止某个值包含有=，会变为\u003d的情�?
+	public static  objMapper = new ObjectMapper();
+	public static Gson gson=new GsonBuilder().disableHtmlEscaping().create(); //防止某个值包含有=，会变为\u003d的情�?
     private static Type type;
     public JsonUtil(){
         if(gson==null){
@@ -26,6 +34,19 @@ public class JsonUtil {
                     .serializeNulls()//Configure Gson to serialize null fields
                     .create();
         }
+        
+        CustomSerializerFactory factory = new CustomSerializerFactory();  
+    	factory.addGenericMapping(Date.class, new JsonSerializer<Date>(){  
+            @Override  
+            public void serialize(Date value,   
+                    JsonGenerator jsonGenerator,   
+                    SerializerProvider provider)  
+                    throws IOException, JsonProcessingException {  
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+                jsonGenerator.writeString(sdf.format(value));  
+            }  
+        });   
+        this.setSerializerFactory(factory);  
     }
 
     /**
@@ -116,18 +137,18 @@ public class JsonUtil {
         return gson.fromJson(json, rtype);
     }
 	
-	public static ObjectMapper objMapper = new ObjectMapper();
+/*	public static ObjectMapper objMapper = new ObjectMapper();
 
 	static {
-		// 解决序列化的时�?? 去掉 为null�? 字段
+		// 解决序列化的时�?? 去掉 为null�? 字段
 		objMapper.setSerializationInclusion(Include.NON_NULL);
 		
 //		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));  
-		// 是否对属性使用排序，默认排序按照字母顺序�?
+		// 是否对属性使用排序，默认排序按照字母顺序�?
 		//objMapper.configure(SerializationConfig.Feature.SORT_PROPERTIES_ALPHABETICALLY, false);
 		
-		//忽略�?些属�?
+		//忽略�?些属�?
 		//objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
 //		DeserializationConfig cfg = objMapper.getDeserializationConfig();  
@@ -138,12 +159,12 @@ public class JsonUtil {
 		
 	}
 
-	/**
-	 * obj转json字符�?.
+	*//**
+	 * obj转json字符�?.
 	 * 
 	 * @param obj
 	 * @return
-	 */
+	 *//*
 	public String toJson(Object obj) {
 		String res = null;
 		try {
@@ -155,14 +176,14 @@ public class JsonUtil {
 		return res;
 	}
 
-	/**
+	*//**
 	 * json转obj.
 	 * 
 	 * @param json
 	 * @param cls
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public Object jsonToBean(String json, Class<?> cls) {
 		Object obj = null;
 		try {
@@ -171,6 +192,9 @@ public class JsonUtil {
 			ex.printStackTrace();
 		}
 		return obj;
-	}
+	}*/
+    
+    
+    
 
 }

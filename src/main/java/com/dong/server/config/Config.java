@@ -49,6 +49,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -86,11 +88,25 @@ public class Config extends WebMvcConfigurerAdapter{
     }
 	
 	
-	
+//	public void configureViewResolvers(ViewResolverRegistry registry) {
+//		// TODO Auto-generated method stub
+//		super.configureViewResolvers(registry);
+//		registry.jsp();
+//		registry.viewResolver(viewResolver);
+//	}
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		// TODO Auto-generated method stub
+		super.addResourceHandlers(registry);
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");  
+		registry.addResourceHandler("/html/**").addResourceLocations("/html/");  
+	}
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		// TODO Auto-generated method stub
 		super.configureDefaultServletHandling(configurer);
-		 configurer.enable(); //配置静态文件处理
+		// configurer.enable(); //配置静态文件处理
+		 
+		
 	}
 	
 	@Bean
@@ -103,8 +119,8 @@ public class Config extends WebMvcConfigurerAdapter{
 		resolvers.add(jaxb2MarshallingXmlViewResolver());
 		resolvers.add(jsonViewResolver());
 		resolvers.add(jspViewResolver());
-//		resolvers.add(pdfViewResolver());
-//		resolvers.add(excelViewResolver());
+		resolvers.add(pdfViewResolver());
+		resolvers.add(excelViewResolver());
 		resolver.setOrder(1);
 		resolver.setViewResolvers(resolvers);
 		return resolver;

@@ -68,6 +68,21 @@
             <version>${spring.version}</version>  
         </dependency>  
        
+       
+       <!-- Needed for PDF View -->  
+        <dependency>  
+            <groupId>com.lowagie</groupId>  
+            <artifactId>itext</artifactId>  
+            <version>4.2.1</version>  
+        </dependency>  
+           
+        <!-- Needed for XLS View -->       
+        <dependency>  
+            <groupId>org.apache.poi</groupId>  
+            <artifactId>poi</artifactId>  
+            <version>3.17-beta1</version>  
+        </dependency>  
+       
         <dependency>
         <groupId>aopalliance</groupId>
         <artifactId>aopalliance</artifactId>
@@ -113,11 +128,13 @@
     <artifactId>jackson-annotations</artifactId>
     <version>${jackson.version}</version>
 </dependency>
+
+<!-- 
      <dependency>
              <groupId>org.codehaus.jackson</groupId>
               <artifactId>jackson-mapper-asl</artifactId>
               <version>1.9.13</version>
-          </dependency>     
+          </dependency>    -->  
         
         <!-- mybatis核心包 -->  
         <dependency>  
