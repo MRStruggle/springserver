@@ -1,7 +1,12 @@
 package com.dong.server.spring.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dong.server.api.ServiceResponse;
 import com.dong.server.config.util.JsonUtil;
+import com.dong.server.config.util.PublicUtil;
 import com.dong.server.spring.entity.Hello;
 import com.dong.server.spring.service.IHello;
 
@@ -127,5 +133,32 @@ public class HelloController {
 //		 mv.addObject("lists", hellos);
 		return "list";
 	}
+	
+	
+	
+		@RequestMapping(value="downloadAttachment",method= RequestMethod.GET)
+		public void downloadAttachment(@RequestParam(value="attachmentName") String filename,HttpServletRequest request,HttpServletResponse response){
+				
+			try {
+				String str = PublicUtil.checkfileISExist(filename,request);
+				if(str != null){
+					//return ServiceResponse.getInstance(Constant.QT_0.getCode(), str);	
+				}
+				
+				PublicUtil.download(filename, request,response);
+				
+				
+				//return ServiceResponse.getInstance(Constant.QT_0.getCode(), new ArrayList());	
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				//return ServiceResponse.getInstance(Constant.QT_9999.getCode(), e.getMessage());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//return null;
+					
+			
+		}
 	
 }

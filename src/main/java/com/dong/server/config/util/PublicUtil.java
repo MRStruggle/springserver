@@ -148,7 +148,7 @@ public class PublicUtil {
      * @param request
      * @return
      */
-    public static boolean saveFile(MultipartFile file,HttpServletRequest request) {  
+    public static void saveFile(MultipartFile file,HttpServletRequest request) {  
         // 判断文件是否为空  
         if (file != null && !file.isEmpty()) {  
             try {  
@@ -164,12 +164,10 @@ public class PublicUtil {
                 String filenamPath = filePath  + name;  
                 // 转存文件  
                 file.transferTo(new File(filenamPath));  
-                return true;  
             } catch (Exception e) {  
                 e.printStackTrace();  
             }  
         }  
-        return false;  
     } 
     
     
@@ -213,27 +211,35 @@ public class PublicUtil {
         String parpatch = filedir.getParent();
 		
 		String fileNamePath = parpatch + "/upload/" + fileName;  
+		System.out.println(fileNamePath);
 		File file = new File(fileNamePath);
 		
 		String userAgent = request.getHeader("User-Agent");
-        boolean isIE = (userAgent != null) && (userAgent.toLowerCase().indexOf("msie") != -1);
+        boolean isIE = (userAgent != null) && (userAgent.toLowerCase().indexOf("msie") != -1 || userAgent.contains("Trident"));
 
         response.reset();
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "must-revalidate, no-transform");
+//        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setDateHeader("Expires", 0L);
 
         response.setContentType("application/x-download");
         response.setContentLength((int) file.length());
-		
+      //设置文件MIME类型  
+        response.setContentType(request.getSession().getServletContext().getMimeType(fileName)); 
         
         if (isIE) {
-        	fileName = URLEncoder.encode(fileName, "UTF-8");
+//        	fileName = URLEncoder.encode(fileName, "UTF-8");
+//        	fileName = URLEncoder.encode(fileName, "gb2312");
+        	fileName = new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
             response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
         } else {
-        	fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
-            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        	//fileName = new String(fileName.getBytes("ISO8859-1"), "UTF-8");
+        	fileName = new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename="+fileName);
+            
         }
+       
         
         BufferedInputStream is = null;
         OutputStream os = null;
