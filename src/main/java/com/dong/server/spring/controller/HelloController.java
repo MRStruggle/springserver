@@ -35,7 +35,7 @@ import com.dong.server.spring.service.IHello;
 //@CrossOrigin
 public class HelloController {
 
-	private Logger logger = Logger.getLogger(HelloController.class);
+	private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	private IHello helloimpl;

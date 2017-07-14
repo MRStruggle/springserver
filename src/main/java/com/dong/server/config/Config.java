@@ -119,8 +119,8 @@ public class Config extends WebMvcConfigurerAdapter{
 		resolvers.add(jaxb2MarshallingXmlViewResolver());
 		resolvers.add(jsonViewResolver());
 		resolvers.add(jspViewResolver());
-		resolvers.add(pdfViewResolver());
-		resolvers.add(excelViewResolver());
+		//resolvers.add(pdfViewResolver());
+		//resolvers.add(excelViewResolver());
 		resolver.setOrder(1);
 		resolver.setViewResolvers(resolvers);
 		return resolver;

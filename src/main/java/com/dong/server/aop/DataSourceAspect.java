@@ -39,6 +39,8 @@ public class DataSourceAspect {//implements MethodBeforeAdvice, AfterReturningAd
 //			TransactionSynchronizationManager.clearSynchronization();
 //		DynamicDataSource.clearDataSourceType();
 //	}
+	
+	
 
 	@Before(value="MethodPointcut()")
 	public void before(JoinPoint point) throws Throwable {
