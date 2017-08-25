@@ -30,7 +30,7 @@ import com.dong.server.spring.entity.Hello;
 import com.dong.server.spring.service.IHello;
 
 
-@Controller
+@RestController
 @RequestMapping("/hello")
 //@CrossOrigin
 public class HelloController {
@@ -94,6 +94,19 @@ public class HelloController {
 		return ServiceResponse.getInstance("0", hellos);
 	}
 	
+	
+	//@DataSource(value="dataSource2")
+	@RequestMapping(value="/fetchAllXml",produces={"application/xml;charset=UTF-8"})
+	public Hello fetchAllxml(){
+		Hello h1  = null;
+		List<Hello> hellos = helloimpl.fetchAll(new Hello());
+		for(Hello h : hellos){
+			h.setCreatedate(h.getCreateTime().toString());
+			h1 = h;
+			break;
+		}
+		return h1;
+	}
 	
 	@RequestMapping(value="update",method= RequestMethod.POST)
 	public ServiceResponse update(){//@RequestBody Hello hello
@@ -160,5 +173,22 @@ public class HelloController {
 					
 			
 		}
+		
+		
+		
+		public void insertlyxuc(){
+			String sql = "INSERT INTO lyx_ucenter.t_zsuserindustryatt (fuserid, findustryid, fstate, fsort, fremark,  fctime, futime) values (?,?,1,?,?,NOW(),NOW())";
+			
+			String select_sql = "select t.USER_ID userid,t.ATTENTION_INDUSTRY industry,t.USER_ORDER sort "+
+ "from lyx_oracle_ucenter.tab_uum_user_detail t  "+ 
+"where t.user_id in "+
+"(select user_id from lyx_oracle_ucenter.tab_uum_users where company_id = 1) "+
+" and t.ATTENTION_INDUSTRY is not null GROUP BY t.user_id ";
+			
+			
+			
+			
+		}
+		
 	
 }

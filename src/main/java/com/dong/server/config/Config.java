@@ -68,7 +68,8 @@ import com.dong.server.spring.entity.Hello;
 @EnableTransactionManagement   //启用事物管理
 @EnableAspectJAutoProxy   //启用aop注解
 @EnableScheduling    //启用后台事物
-//@PropertySource(value="classpath:db.properties") 
+//@EnableConfigurationProperties
+//@PropertySource("classpath:com/dong/server/db.properties") 
 //@PropertySource(value = { "classpath:db.properties","classpath:db2.properties" })
 public class Config extends WebMvcConfigurerAdapter{
 
@@ -200,6 +201,12 @@ public class Config extends WebMvcConfigurerAdapter{
     
    
     
+   @Autowired
+   private Environment environment;
+   
+   @Value("${db.url}")
+   private String dburl;
+    
 
     /**
      * 数据库1配置
@@ -268,7 +275,8 @@ public class Config extends WebMvcConfigurerAdapter{
 //	     	DataSource datasource = getdataSource2(p2.getProperty("db2.url"),p2.getProperty("db2.user"),p2.getProperty("db2.password"),p2.getProperty("db2.driver"));
     		 map.put("dataSource", getdataSource("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver"));
         	 
-        	 
+        	String url = this.dburl;
+        	Environment wnvir = this.environment;
     	    	
     	    DataSource datasource = getdataSource2("jdbc:mysql://localhost:3306/testtwo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true","root","root","com.mysql.jdbc.Driver");
 	    	
@@ -293,7 +301,7 @@ public class Config extends WebMvcConfigurerAdapter{
 
     
     @Bean(name="sqlSessionFactory")
-    @Scope(value=ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    //@Scope(value=ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public SqlSessionFactoryBean  sqlSessionFactory(DataSource ds){
         SqlSessionFactoryBean  factory = new SqlSessionFactoryBean();
 

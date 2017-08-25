@@ -3,6 +3,7 @@ package com.dong.server.spring.service;
 import java.util.List;
 
 import com.dong.server.spring.entity.Hello;
+import com.dong.server.spring.entity.Industry;
 
 public interface IHello {
 
@@ -11,6 +12,7 @@ public interface IHello {
 	void savetwo(Hello hello);
 
 	List<Hello> fetchAll(Hello hello);
+	
 
 	void update(Hello hello);
 
